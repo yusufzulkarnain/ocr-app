@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "451313349417",
+    "project_id": "ocrmikro",
+    "storage_bucket": "ocrmikro.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:451313349417:android:f5d43b9329a27131c97d38",
+        "android_client_info": {
+          "package_name": "com.ocrmikro"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmDU8ivZSxZaUzrcxBhQSlXxYPSZEzFms"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
