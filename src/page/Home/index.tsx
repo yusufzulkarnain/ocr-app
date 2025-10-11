@@ -22,7 +22,7 @@ import moment from 'moment';
 import 'moment/locale/id';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFocusEffect} from '@react-navigation/native';
-import TextTicker from 'react-native-text-ticker';
+// import TextTicker from 'react-native-text-ticker';
 
 moment.locale('id');
 // Tipe untuk properti navigation
@@ -173,9 +173,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
       text1: 'Berhasil keluar',
     });
     setTimeout(() => {
-      navigation.navigate('Login');
+      navigation.replace('LoginKops');
     }, 2000);
-    // navigation.navigate('Print');
   };
 
   const clearAsyncStorage = async () => {
@@ -286,7 +285,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
       <View style={styles.mapsContent}>
         <View style={styles.containerLokasiPenugasan}>
           <MapPinned size={toDp(30)} color={'#FFFFFF'} />
-          {state.dataStorageTugas.rute ? (
+          {/* {state.dataStorageTugas.rute ? (
             <TextTicker
               duration={3000}
               loop={true}
@@ -315,7 +314,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({navigation}) => {
               }}>
               Lokasi tugas belum dipilih
             </Text>
-          )}
+          )} */}
         </View>
 
         <TouchableOpacity

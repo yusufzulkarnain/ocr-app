@@ -14,11 +14,15 @@ import {
   Dimensions,
   ToastAndroid,
 } from 'react-native';
+// import {
+//   BluetoothEscposPrinter,
+//   BluetoothManager,
+//   BluetoothTscPrinter,
+// } from 'react-native-bluetooth-escpos-printer';
 import {
-  BluetoothEscposPrinter,
   BluetoothManager,
-  BluetoothTscPrinter,
-} from 'react-native-bluetooth-escpos-printer';
+  BluetoothEscposPrinter,
+} from 'react-native-thermal-receipt-printer';
 import moment from 'moment';
 // import EscPos from './escpos';
 // import Tsc from './tsc';
@@ -135,7 +139,7 @@ export default class Print extends Component {
 
   _deviceAlreadPaired(rsp) {
     var ds = null;
-    if (typeof rsp.devices == 'object') {
+    if (typeof rsp.devices === 'object') {
       ds = rsp.devices;
     } else {
       try {
@@ -155,7 +159,7 @@ export default class Print extends Component {
     //alert(JSON.stringify(rsp))
     var r = null;
     try {
-      if (typeof rsp.device == 'object') {
+      if (typeof rsp.device === 'object') {
         r = rsp.device;
       } else {
         r = JSON.parse(rsp.device);
@@ -275,7 +279,7 @@ export default class Print extends Component {
       await BluetoothEscposPrinter.printerAlign(
         BluetoothEscposPrinter.ALIGN.LEFT,
       );
-      await BluetoothEscposPrinter.printText(`Rute    : test\n`, {});
+      await BluetoothEscposPrinter.printText('Rute    : test\n', {});
       await BluetoothEscposPrinter.printText(
         `Lokasi  : ${this.state.data.rute}\n`,
         {},

@@ -4,7 +4,7 @@ import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import Modal from 'react-native-modal';
 import {toDp} from '../hepers/PercentageToDp';
 import GlobalText from './globalText';
-import {IdCard, Bus, Clock} from 'lucide-react-native';
+import {IdCard, Bus, Clock, BadgeCheck} from 'lucide-react-native';
 
 type RenderModalProps = {
   isVisible: boolean;
@@ -45,6 +45,8 @@ const CustomModal: React.FC<RenderModalProps> = ({
               <Bus size={20} color={'#16509B'} />
             ) : typeIcon === 'shift' ? (
               <Clock size={20} color={'#16509B'} />
+            ) : typeIcon === 'qr' ? (
+              <BadgeCheck size={20} color={'#16509B'} />
             ) : (
               <IdCard size={20} color={'#16509B'} />
             )}

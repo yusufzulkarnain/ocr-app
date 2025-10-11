@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="80" viewBox="0 0 200 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Rectangle -->
+  <rect width="200" height="80" rx="10" fill="#06367C"/>
+  
+  <!-- Bus Icon -->
+  <g transform="translate(20, 20)">
+    <rect x="0" y="0" width="40" height="25" rx="4" fill="white"/>
+    <rect x="5" y="5" width="30" height="8" rx="2" fill="#06367C"/>
+    <circle cx="10" cy="25" r="4" fill="white" stroke="#06367C" stroke-width="2"/>
+    <circle cx="30" cy="25" r="4" fill="white" stroke="#06367C" stroke-width="2"/>
+  </g>
+  
+  <!-- Text as paths -->
+  <g transform="translate(70, 30)" fill="white">
+    <path d="M10 35h25v-5H10v-10h25v-5H5v30h30v-5H10z"/>
+    <path d="M45 35h20v-5H45v-10h20v-5H40v30h25v-5H45z"/>
+    <path d="M75 15v20h5V15z"/>
+    <path d="M90 35h25v-5H90v-10h25v-5H85v30h30v-5H90z"/>
+    <path d="M130 15v20h5V15z"/>
+    <path d="M145 35h20v-5h-20z"/>
+  </g>
+</svg> 

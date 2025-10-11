@@ -1,133 +1,165 @@
-import React, {useRef, useEffect} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
+  Linking,
+  TextInput,
   View,
   StyleSheet,
-  Dimensions,
-  Vibration,
-  Linking,
-  Animated,
-  Pressable,
+  AppState,
+  AppStateStatus,
+  Image,
 } from 'react-native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {images} from '../../assets';
 import {toDp} from '../../hepers/PercentageToDp';
 import GlobalText from '../../component/globalText';
-import moment from 'moment';
-import 'moment/locale/id';
-import {RNCamera} from 'react-native-camera';
-import Toast from 'react-native-toast-message';
-import {Zap, ZapOff} from 'lucide-react-native';
+import Modal from 'react-native-modal';
+import {useFocusEffect} from '@react-navigation/native';
+import {Keyboard} from 'react-native';
+import {useStatusBar} from '../../hooks/useStatusBar';
 
-const {width, height} = Dimensions.get('window');
+const ScannerScreen = () => {
+  const [text, setText] = useState('');
+  const inputRef = useRef<TextInput>(null);
+  const appState = useRef(AppState.currentState);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [loading, setLoading] = useState(false);
+  useStatusBar({
+    backgroundColor: '#06367C',
+    barStyle: 'light-content',
+    translucent: true,
+  });
+  useFocusEffect(
+    React.useCallback(() => {
+      // Kadang scanner butuh delay agar bisa "rebind" input
+      const timeout = setTimeout(() => {
+        inputRef.current?.focus();
+      }, 500); // Bisa coba 300–1000 tergantung device
 
-moment.locale('id');
+      return () => {
+        clearTimeout(timeout);
+      };
+    }, []),
+  );
 
-type HomeScreenProps = {
-  navigation: NativeStackNavigationProp<any>;
-};
-
-const QrAsset: React.FC<HomeScreenProps> = ({navigation}) => {
-  const scanLineAnim = useRef(new Animated.Value(0)).current;
-  const [flashOn, setFlashOn] = React.useState(false);
-  const [isScanned, setIsScanned] = React.useState(false);
-
-  // Mulai animasi naik turun
   useEffect(() => {
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(scanLineAnim, {
-          toValue: 1,
-          duration: 2000,
-          useNativeDriver: true,
-        }),
-        Animated.timing(scanLineAnim, {
-          toValue: 0,
-          duration: 2000,
-          useNativeDriver: true,
-        }),
-      ]),
-    ).start();
+    inputRef.current?.focus();
+
+    const subscription = AppState.addEventListener(
+      'change',
+      handleAppStateChange,
+    );
+
+    return () => {
+      subscription.remove();
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
   }, []);
 
-  const onSuccess = (e: {data: any}) => {
-    if (isScanned) return;
+  const handleAppStateChange = (nextAppState: AppStateStatus) => {
+    if (
+      appState.current.match(/inactive|background/) &&
+      nextAppState === 'active'
+    ) {
+      setTimeout(() => {
+        inputRef.current?.blur();
+        inputRef.current?.focus();
+      }, 500); // Delay penting agar scanner bisa attach
+    }
 
-    setIsScanned(true);
-    Vibration.vibrate(20);
-    Toast.show({
-      type: 'success',
-      text1: 'Berhasil',
-      text2: e.data,
-    });
-
-    setTimeout(() => {
-      Linking.openURL('https://beta.transjakarta.co.id/sma/data/' + e.data);
-      setIsScanned(false);
-    }, 3000);
+    appState.current = nextAppState;
   };
 
-  const translateY = scanLineAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, toDp(320) - toDp(2)], // 2dp tinggi garis
-  });
+  // const onChangeText = (input: string) => {
+  //   console.log('Input:', input);
+  //   setText(input);
+  //   setLoading(true);
 
-  const handleFlash = () => {
-    setFlashOn(prev => !prev);
+  //   if (timeoutRef.current) clearTimeout(timeoutRef.current);
+
+  //   timeoutRef.current = setTimeout(() => {
+  //     const cleaned = input.trim().replace(/[\n\r]/g, '');
+
+  //     if (cleaned.length > 5) {
+  //       Linking.openURL(
+  //         `https://aset.transjakarta.co.id/data/${cleaned}`,
+  //       ).catch(err => console.warn('URL Error:', err));
+
+  //       setTimeout(() => {
+  //         setText('');
+  //         setLoading(false);
+  //         inputRef.current?.focus();
+  //       }, 500);
+  //     }
+  //   }, 300);
+  // };
+
+  const onChangeText = (input: string) => {
+    console.log('Input:', input);
+    setText(input);
+
+    // Bersihkan timeout sebelumnya (untuk debounce)
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+
+    // Set debounce timeout
+    timeoutRef.current = setTimeout(() => {
+      const cleaned = input.trim().replace(/[\n\r]/g, '');
+
+      if (cleaned.length > 5) {
+        setLoading(true); // ⏳ Tampilkan modal loading sebelum proses openURL
+
+        // Tambahkan delay agar modal sempat terlihat (opsional tapi disarankan)
+        setTimeout(() => {
+          Linking.openURL(`https://aset.transjakarta.co.id/data/${cleaned}`)
+            .catch(err => console.warn('URL Error:', err))
+            .finally(() => {
+              // Reset input & loading setelah delay
+              setTimeout(() => {
+                setText('');
+                setLoading(false);
+                inputRef.current?.focus();
+              }, 300); // beri waktu sedikit untuk user lihat transisi
+            });
+        }, 100); // delay kecil untuk pastikan modal tampil sebelum openURL
+      }
+    }, 300);
   };
 
   return (
     <View style={styles.container}>
-      <RNCamera
-        captureAudio={false}
-        style={{width, height}}
-        type={RNCamera.Constants.Type.back}
-        androidCameraPermissionOptions={{
-          title: 'Permission to use camera',
-          message: 'We need your permission to use your camera',
-          buttonPositive: 'Ok',
-          buttonNegative: 'Cancel',
-        }}
-        flashMode={
-          flashOn
-            ? RNCamera.Constants.FlashMode.torch
-            : RNCamera.Constants.FlashMode.off
-        }
-        onBarCodeRead={onSuccess}>
-        <View style={styles.maskTopText}>
-          <GlobalText size={toDp(14)} style={styles.instructionText}>
-            Selamat Datang Di TJ-ASSET
-          </GlobalText>
-          <GlobalText size={toDp(14)} style={styles.textDeskrip}>
-            Sejajarkan kode QR di dalam bingkai untuk dipindai
-          </GlobalText>
+      <Modal
+        isVisible={loading}
+        style={{justifyContent: 'center', alignItems: 'center'}}
+        animationIn="zoomIn"
+        animationOut="zoomOut"
+        backdropOpacity={0.5}>
+        <View
+          style={{
+            backgroundColor: '#FFFFFF',
+            borderRadius: toDp(12),
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: toDp(12),
+          }}>
+          <Image source={images.hourglass} style={styles.loadingGif} />
         </View>
-        <View style={styles.overlay}>
-          <View style={styles.maskTop} />
-          <View style={styles.maskCenter}>
-            <View style={styles.maskSide} />
-            <View style={styles.focusedArea}>
-              {/* Garis animasi naik-turun */}
-              <Animated.View
-                style={[
-                  styles.scanLine,
-                  {
-                    transform: [{translateY}],
-                  },
-                ]}
-              />
-            </View>
-            <View style={styles.maskSide} />
-          </View>
-          <View style={styles.maskBottom}>
-            <Pressable onPress={handleFlash}>
-              {flashOn ? (
-                <Zap size={40} color={'#FFFFFF'} />
-              ) : (
-                <ZapOff size={40} color={'#FFFFFF'} />
-              )}
-            </Pressable>
-          </View>
-        </View>
-      </RNCamera>
+      </Modal>
+      <View style={styles.rowGif}>
+        <Image source={images.barcode_gif} style={styles.gifImage} />
+        <GlobalText size={toDp(16)} typeText="regular">
+          Pindai QR Asset Dengan Scanner
+        </GlobalText>
+      </View>
+
+      <TextInput
+        ref={inputRef}
+        style={styles.input}
+        placeholder="Scan barcode..."
+        value={text}
+        onChangeText={onChangeText}
+        blurOnSubmit={false}
+        showSoftInputOnFocus={false}
+        keyboardType="default"
+        autoFocus
+      />
     </View>
   );
 };
@@ -135,67 +167,32 @@ const QrAsset: React.FC<HomeScreenProps> = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    padding: 20,
+    backgroundColor: '#fff',
     alignItems: 'center',
   },
-  overlay: {
-    flex: 1,
-    justifyContent: 'center',
+  input: {
+    // borderColor: '#000',
+    // borderWidth: 1,
+    // fontSize: 18,
+    padding: 10,
+    width: 1,
+    height: 1,
+    opacity: 0,
   },
-  maskTop: {
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    height: toDp(180),
+  gifImage: {
+    width: toDp(200),
+    height: toDp(200),
+    // alignSelf: 'center',
   },
-  maskCenter: {
-    flexDirection: 'row',
-    height: toDp(320),
-  },
-  maskSide: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-  },
-  focusedArea: {
-    width: toDp(320),
-    height: toDp(320),
-    borderWidth: toDp(3),
-    borderColor: '#00FF00',
-    backgroundColor: 'transparent',
-    overflow: 'hidden',
-  },
-  scanLine: {
-    width: '100%',
-    height: toDp(2),
-    backgroundColor: '#00FF00',
-    position: 'absolute',
-    top: 0,
-  },
-  maskBottom: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    justifyContent: 'center',
+  rowGif: {
     alignItems: 'center',
   },
-  maskTopText: {
-    position: 'absolute',
-    top: toDp(24),
-    zIndex: 1,
-    alignSelf: 'center',
-  },
-  instructionText: {
-    color: '#FFF',
-    fontSize: toDp(16),
-    textAlign: 'center',
-    paddingHorizontal: toDp(20),
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  textDeskrip: {
-    color: '#FFF',
-    fontSize: toDp(14),
-    textAlign: 'center',
-    paddingHorizontal: toDp(20),
-    fontFamily: 'PlusJakartaSans-Regular',
-    marginTop: toDp(12),
+  loadingGif: {
+    width: toDp(60),
+    height: toDp(60),
   },
 });
 
-export default QrAsset;
+export default ScannerScreen;

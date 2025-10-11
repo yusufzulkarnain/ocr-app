@@ -1,4 +1,5 @@
 import {Dimensions, PixelRatio} from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 
 const {width, height} = Dimensions.get('window');
 
@@ -15,6 +16,17 @@ const heightPercentageToDP = (heightPercent: number): number => {
 const toDp = (size: number): number => {
   const screenHeight = Dimensions.get('window').width;
   return PixelRatio.roundToNearestPixel((screenHeight * size) / 100) / 3.6;
+};
+
+const toDpSize = async (size: number): Promise<number> => {
+  const isTab = await DeviceInfo.isTablet();
+  if (isTab) {
+    const screenWidth = Math.min(width, height);
+    return PixelRatio.roundToNearestPixel((screenWidth * size) / 100) / 7.3;
+  } else {
+    const screenHeight = Dimensions.get('window').width;
+    return PixelRatio.roundToNearestPixel((screenHeight * size) / 100) / 3.6;
+  }
 };
 
 const toDpLandspace = (size: number): number => {

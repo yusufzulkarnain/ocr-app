@@ -1,11 +1,9 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   StyleSheet,
-  Text,
   ImageBackground,
   TextInput,
   View,
-  TouchableOpacity,
   Image,
   Dimensions,
   Pressable,
@@ -13,12 +11,12 @@ import {
 } from 'react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {toDp} from '../../hepers/PercentageToDp';
-import LinearGradient from 'react-native-linear-gradient';
 import GlobalText from '../../component/globalText';
 import {Eye, EyeOff} from 'lucide-react-native';
 import {postData} from '../../hepers/Api';
 import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {images} from '../../assets';
 
 // Tipe untuk properti navigation
 type LoginScreenProps = {
@@ -30,6 +28,11 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
   const [nik, setNik] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [loading, setLoading] = React.useState(false);
+
+  useEffect(() => {
+    console.log('Login page opened');
+  }, []);
+
   const handleLoginPost = async () => {
     setLoading(true);
     try {
@@ -80,16 +83,11 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
     }
   };
   return (
-    <ImageBackground
-      source={require('../../assets/img/Mikrotrans.png')}
-      style={styles.container}>
+    <ImageBackground source={images.mikrotrans} style={styles.container}>
       <View style={styles.contain}>
         <View style={styles.header}>
-          <Image
-            resizeMode="contain"
-            style={styles.logoHeader}
-            source={require('../../assets/img/LogoLogin.png')}
-          />
+          <Image style={styles.imageMikrotrans} source={images.mikrotrans} />
+          <Image style={styles.imageLogo} source={images.logo_login} />
         </View>
         <GlobalText typeText="bold" size={toDp(20)} style={styles.textTitle}>
           NIK
@@ -167,16 +165,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   contain: {
-    // justifyContent: 'center',
-    // flex: 1,
-    // borderWidth: toDp(1),
     height: Dimensions.get('window').height / 1.5,
     marginTop: toDp(40),
   },
   header: {
     alignItems: 'center',
-    // paddingTop: toDp(20),
-    // borderWidth: toDp(1),
   },
   formBox: {
     width: toDp(320),
@@ -232,7 +225,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#308CF6',
     justifyContent: 'center',
   },
-  logoHeader: {
+  imageMikrotrans: {
+    width: toDp(199),
+    height: toDp(90),
+  },
+  imageLogo: {
     width: toDp(199),
     height: toDp(90),
   },

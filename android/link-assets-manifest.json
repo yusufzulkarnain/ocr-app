@@ -32,6 +32,62 @@
     {
       "path": "src/assets/fonts/PlusJakartaSans-Regular.ttf",
       "sha1": "25ba6345e577fa516ad5f89405933171a8d81eb0"
+    },
+    {
+      "path": "src/assets/img/bgqr.png",
+      "sha1": "87e312dae2b00aa998fdfd606e44bc441c18c844"
+    },
+    {
+      "path": "src/assets/img/hands_logo.png",
+      "sha1": "3ac9355ab66b1c51b5a65fe581b5ed7a71acb3e6"
+    },
+    {
+      "path": "src/assets/img/hourglass.gif",
+      "sha1": "bf1a5e8954c474d8722b1c8d0272bb768199b4c0"
+    },
+    {
+      "path": "src/assets/img/login_logo.png",
+      "sha1": "f4864e046216f60c02d1ab7b8875ae7f6d5ca91d"
+    },
+    {
+      "path": "src/assets/img/logo.svg",
+      "sha1": "1115ae9929ba7d5853c79b198565035784de1d9f"
+    },
+    {
+      "path": "src/assets/img/logo3.jpg",
+      "sha1": "d5c407c5e0688f9fa20fd9dc0ec8cd088b0b6794"
+    },
+    {
+      "path": "src/assets/img/logo_login.png",
+      "sha1": "2bd41070149563b59051f1576b1792cb146594a6"
+    },
+    {
+      "path": "src/assets/img/logotjpng",
+      "sha1": "6ab6d1ac90653e4331d611f4a9d6055b17bc5bb0"
+    },
+    {
+      "path": "src/assets/img/mikrotrans.png",
+      "sha1": "199039a618c26a87a4626a1aeb86b776f7c27630"
+    },
+    {
+      "path": "src/assets/img/onboarding1.svg",
+      "sha1": "d7683bcb00d07f0c4457cd7517c09352e01b8e9a"
+    },
+    {
+      "path": "src/assets/img/onboarding2.svg",
+      "sha1": "e610e1b6a83241e21c35ccd2f7e8aab850378f23"
+    },
+    {
+      "path": "src/assets/img/onboarding3.svg",
+      "sha1": "cdaffb45eccb37cfc9167c5cb3e3f14a8487faa5"
+    },
+    {
+      "path": "src/assets/img/pic_bus.png",
+      "sha1": "fc92ffa6fb6a061570805462c4f78108d852e52d"
+    },
+    {
+      "path": "src/assets/img/waiting.gif",
+      "sha1": "2547eb8d6e823ad888ad5adda8da0b29a1dd4751"
     }
   ]
 }

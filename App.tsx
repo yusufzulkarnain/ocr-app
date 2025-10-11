@@ -6,48 +6,64 @@
  */
 
 import React from 'react';
-import Navigators from './src/navigators/Navigators';
-import {enableScreens} from 'react-native-screens';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {SplashScreen} from './src/screens/SplashScreen';
+import {OnboardingScreen} from './src/screens/OnboardingScreen';
+import LoginKops from './src/page/Login/indexKop';
+// import LoginKops from './src/page/FitScreen';
+import ChartScreen from './src/page/chart/index4';
+import {HomeTabs, LoginStak} from './src/navigators/NavigatorsBak';
 import Toast from 'react-native-toast-message';
 import PushNotification from 'react-native-push-notification';
 import {Alert} from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 import {requestNotificationPermission} from './src/hepers/PermissionHelper';
+import {initializeFirebase} from './src/config/firebase';
+// import QrAsset from './src/page/qrsasset/index';
 
-// enableScreens(); // Aktifkan penggunaan native screens
+// Initialize Firebase
+initializeFirebase();
 
-function App() {
+const Stack = createNativeStackNavigator();
+
+const App = () => {
   React.useEffect(() => {
-    requestNotificationPermission();
-    async function requestUserPermission() {
-      const authStatus = await messaging().requestPermission();
-      const enabled =
-        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+    const initApp = async () => {
+      try {
+        // Initialize Firebase
+        await initializeFirebase();
 
-      if (enabled) {
-        console.log('Authorization status:', authStatus);
+        // Request notification permission
+        await requestNotificationPermission();
+
+        const authStatus = await messaging().requestPermission();
+        const enabled =
+          authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+          authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+        if (enabled) {
+          console.log('Authorization status:', authStatus);
+        }
+      } catch (error) {
+        console.error('Error initializing app:', error);
       }
-    }
+    };
+
+    initApp();
+
     messaging().setBackgroundMessageHandler(async remoteMessage => {
       console.log('Message handled in the background!', remoteMessage);
-      // pushLocalNotif(
-      //   'transitApp',
-      //   remoteMessage.notification.title,
-      //   remoteMessage.notification.body,
-      // );
     });
+
     messaging().onMessage(async remoteMessage => {
       console.log('A new FCM message arrived!', remoteMessage);
       // Send local notification
       pushLocalNotif(
         'microOcr',
-        remoteMessage.notification?.title,
-        remoteMessage.notification?.body,
+        remoteMessage.notification?.body || 'New message',
       );
     });
-
-    requestUserPermission();
   }, []);
 
   React.useEffect(() => {
@@ -158,12 +174,20 @@ function App() {
       message: messageBody.body, // (required)
     });
   };
+
   return (
-    <>
-      <Navigators />
+    <NavigationContainer>
+      <Stack.Navigator
+        initialRouteName="Splash"
+        screenOptions={{headerShown: false}}>
+        <Stack.Screen name="Splash" component={SplashScreen} />
+        <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+        <Stack.Screen name="LoginKops" component={LoginStak} />
+        <Stack.Screen name="Home" component={HomeTabs} />
+      </Stack.Navigator>
       <Toast />
-    </>
+    </NavigationContainer>
   );
-}
+};
 
 export default App;
