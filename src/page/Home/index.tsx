@@ -11,7 +11,7 @@ import {
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {requestLocationPermission} from '../../hepers/PermissionHelper';
 import Geolocation from '@react-native-community/geolocation';
-import Headers from '../../component/headers';
+import {Headers} from '../../component/headers';
 import {toDp} from '../../hepers/PercentageToDp';
 import GlobalText from '../../component/globalText';
 import {MapPin, MapPinCheck, MapPinned} from 'lucide-react-native';
@@ -19,7 +19,7 @@ import Toast from 'react-native-toast-message';
 import MapView, {Marker} from 'react-native-maps';
 import mapStyle from '../../mapStyle.json';
 import moment from 'moment';
-import 'moment/locale/id';
+// import 'moment/locale/id';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFocusEffect} from '@react-navigation/native';
 // import TextTicker from 'react-native-text-ticker';

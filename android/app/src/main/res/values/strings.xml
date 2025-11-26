@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">KOPKARTRANS</string>
+    <!-- <string name="app_name">KOPKARTRANS</string> -->
+    <string name="app_name">Apps</string>
 </resources>

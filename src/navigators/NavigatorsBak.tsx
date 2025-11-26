@@ -26,6 +26,8 @@ import KeuanganScrenn from '../page/Home/Keuangan';
 import {SplashScreen} from '../screens/SplashScreen';
 import ChangePassword from '../page/Profile/ChangePassword';
 import CameraScreen from '../page/camera';
+import HomeNfcScreen from '../page/nfc/home';
+import TransaksiNfc from '../page/nfc/transakasi';
 
 interface AnimatedTabIconProps {
   focused: boolean;
@@ -170,6 +172,23 @@ function HomeStackScreen() {
           headerShown: true,
           animation: 'slide_from_right',
         }}
+      />
+    </HomeStack.Navigator>
+  );
+}
+
+function HomeNfcStackScreen() {
+  return (
+    <HomeStack.Navigator>
+      <HomeStack.Screen
+        name="HomeNfcScreen"
+        component={HomeNfcScreen}
+        options={{headerShown: false}}
+      />
+      <HomeStack.Screen
+        name="TransaksiNfcScreen"
+        component={TransaksiNfc}
+        options={{title: 'Transaksi', animation: 'slide_from_right', headerShown: false}}
       />
     </HomeStack.Navigator>
   );
@@ -368,6 +387,9 @@ function HomeTabs() {
   );
 }
 
+
+
+
 // Stack Navigator
 const Stack = createNativeStackNavigator();
 const LoginStack = createNativeStackNavigator();
@@ -390,7 +412,7 @@ function LoginStak() {
 }
 
 // Export HomeTabs component
-export {HomeTabs, LoginStak};
+export {HomeTabs, LoginStak, HomeNfcStackScreen};
 
 function Navigators() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -403,11 +425,12 @@ function Navigators() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown: false}}>
-        {isLoggedIn ? (
+        {/* {isLoggedIn ? (
           <Stack.Screen name="Home" component={HomeTabs} />
         ) : (
           <Stack.Screen name="Auth" component={LoginStak} />
-        )}
+        )} */}
+        <Stack.Screen name="Home" component={HomeNfcStackScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

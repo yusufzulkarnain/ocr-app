@@ -8,12 +8,13 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {SplashScreen} from './src/screens/SplashScreen';
+// import {SplashScreen} from './src/screens/SplashScreen';
+import RaceScreen from './src/screens/RaceBox';
 import {OnboardingScreen} from './src/screens/OnboardingScreen';
 import LoginKops from './src/page/Login/indexKop';
 // import LoginKops from './src/page/FitScreen';
 import ChartScreen from './src/page/chart/index4';
-import {HomeTabs, LoginStak} from './src/navigators/NavigatorsBak';
+import {HomeTabs, LoginStak, HomeNfcStackScreen} from './src/navigators/NavigatorsBak';
 import Toast from 'react-native-toast-message';
 import PushNotification from 'react-native-push-notification';
 import {Alert} from 'react-native';
@@ -180,10 +181,11 @@ const App = () => {
       <Stack.Navigator
         initialRouteName="Splash"
         screenOptions={{headerShown: false}}>
-        <Stack.Screen name="Splash" component={SplashScreen} />
-        <Stack.Screen name="Onboarding" component={OnboardingScreen} />
-        <Stack.Screen name="LoginKops" component={LoginStak} />
-        <Stack.Screen name="Home" component={HomeTabs} />
+        {/* <Stack.Screen name="Splash" component={RaceScreen} /> */}
+        {/* <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+        <Stack.Screen name="LoginKops" component={LoginStak} /> */}
+        {/* <Stack.Screen name="Home" component={HomeTabs} /> */}
+        <Stack.Screen name="Splash" component={HomeNfcStackScreen} />
       </Stack.Navigator>
       <Toast />
     </NavigationContainer>

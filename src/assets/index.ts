@@ -26,4 +26,10 @@ export const images = {
   icTransfer: require('./img/transfer.png'),
   icScanQr: require('./img/scanqr.png'),
   icWithdraw: require('./img/withdraw.png'),
+  gifScan: require('./img/scan.gif'),
+  gifnfc: require('./img/card.gif'),
+  gub: require('./img/gub.png'),
+  wagub: require('./img/wagub.png'),
+  failedcard: require('./img/failedcard.png'),
+  successcard: require('./img/paymentsuccess.png'),
 };
