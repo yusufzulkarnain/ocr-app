@@ -87,19 +87,21 @@ useStatusBar({
         const uid = tag.id.toUpperCase();
           try {
               const result = await getSaldo(
-                'cek_saldo.php?id=' + 'uid',
+                'cek_saldo.php?id=' + uid,
               );
-              setCardNumber(uid);
-              console.log('result uid:', result);
-              Toast.show({
-                type: result?.status === false ? 'error' : 'success',
-                text1: result?.status === false ? 'Gagal' : 'Berhasil',
-                text2: result?.status === false ? result?.message : 'Nomor kartu:' + uid,
-              });
-              navigation.navigate('TransaksiNfcScreen', {cardNumber: uid, saldo: result?.saldo || '0'});
+              
               if (result?.status === false) {
                 setErrorMessage(result?.message || 'Terjadi kesalahan');
                 setModalVisible(true);
+              }else{
+                setCardNumber(uid);
+                console.log('result uid:', result);
+                Toast.show({
+                  type: result?.status === false ? 'error' : 'success',
+                  text1: result?.status === false ? 'Gagal' : 'Berhasil',
+                  text2: result?.status === false ? result?.message : 'Nomor kartu:' + uid,
+                });
+                navigation.navigate('TransaksiNfcScreen', {cardNumber: uid, saldo: result?.saldo || '0'});
               }
               setLoading(false);
             } catch (error: any) {

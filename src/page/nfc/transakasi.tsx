@@ -130,7 +130,7 @@ const TransaksiNfc: React.FC<HomeScreenProps> = ({navigation, route}) => {
             }} 
             >
             {loadingData ? (<ActivityIndicator size="small" color={'#fff'}/>) : (<GlobalText typeText='bold' style={{color: '#fff'}} size={toDp(18)}>
-              Checkout
+              Bayar
             </GlobalText>)}    
             
           </TouchableOpacity>
